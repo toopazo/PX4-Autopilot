@@ -230,22 +230,6 @@ PARAM_DEFINE_FLOAT(NPFG_SW_DST_MLT, 0.32f);
 PARAM_DEFINE_FLOAT(NPFG_PERIOD_SF, 1.5f);
 
 /**
- * Minimum trim throttle
- *
- * This is the throttle setting required to achieve the FW_AIRSPD_MIN during level flight at nominal weight.
- * Setting this to a negative value disables the mapping from equivalent airspeed to cruise throttle for airspeed
- * setpoints below the trim airspeed setpoint. For vehicles without an airspeed sensor this means that airspeed setpoints
- * below the trim airspeed setpoint will not have any effect.
- *
- * @unit norm
- * @max 1.0
- * @decimal 2
- * @increment 0.01
- * @group FW L1 Control
- */
-PARAM_DEFINE_FLOAT(FW_THR_TRIM_MIN, -1.0f);
-
-/**
  * Trim throttle
  *
  * This is the throttle setting required to achieve FW_AIRSPD_TRIM during level flight. Most airframes have a value of 0.5-0.7.
@@ -258,39 +242,6 @@ PARAM_DEFINE_FLOAT(FW_THR_TRIM_MIN, -1.0f);
  * @group FW L1 Control
  */
 PARAM_DEFINE_FLOAT(FW_THR_TRIM, 0.6f);
-
-/**
- * Maximum trim throttle
- *
- * This is the throttle setting required to achieve FW_AIRSPD_MAX during level flight at nominal weight.
- * Setting this to a negative value disables the mapping from equivalent airspeed to cruise throttle for airspeed
- * setpoints above the trim airspeed setpoint. For vehicles without an airspeed sensor this means that airspeed setpoints
- * above the trim airspeed setpoint will not have any effect.
- *
- * @unit norm
- * @max 1.0
- * @decimal 2
- * @increment 0.01
- * @group FW L1 Control
- */
-PARAM_DEFINE_FLOAT(FW_THR_TRIM_MAX, -1.0f);
-
-/**
- * Throttle air density scale
- *
- * This scale can be used to fine tune the throttle compensation based on air density.
- * E.g. throttle_compensated = throttle * eas2tas * FW_THR_ALT_SCL
- * where eas2tas is the conversion factor from equivalent to true airspeed (calculated using estimated air density)
- *
- * The default value of 0 will disable scaling.
- *
- * @min 0.0
- * @max 10.0
- * @decimal 1
- * @increment 0.1
- * @group FW L1 Control
- */
-PARAM_DEFINE_FLOAT(FW_THR_ALT_SCL, 0.0f);
 
 /**
  * Throttle max slew rate
