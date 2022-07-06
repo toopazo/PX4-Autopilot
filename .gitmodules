@@ -63,3 +63,6 @@
 [submodule "src/modules/microdds_client/Micro-XRCE-DDS-Client"]
 	path = src/modules/microdds_client/Micro-XRCE-DDS-Client
 	url = https://github.com/eProsima/Micro-XRCE-DDS-Client.git
+[submodule "src/modules/mavlink/mavlink/pymavlink"]
+	path = src/modules/mavlink/mavlink/pymavlink
+	url = https://github.com/ArduPilot/pymavlink.git
