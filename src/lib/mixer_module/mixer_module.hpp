@@ -52,6 +52,11 @@
 #include <uORB/topics/control_allocator_status.h>
 #include <uORB/topics/parameter_update.h>
 #include <uORB/topics/test_motor.h>
+/* toopazo */
+#include <uORB/topics/firefly_ctrlalloc.h>
+#include <uORB/topics/firefly_delta.h>
+#include <uORB/topics/rc_channels.h>
+/* toopazo */
 
 using namespace time_literals;
 
@@ -290,13 +295,25 @@ private:
 	const bool _output_ramp_up; ///< if true, motors will ramp up from disarmed to min_output after arming
 
 	uORB::Subscription _armed_sub{ORB_ID(actuator_armed)};
+	/* toopazo */
+	uORB::Subscription _delta_sub{ORB_ID(firefly_delta)};
+	uORB::Subscription _rcchan_sub{ORB_ID(rc_channels)};
+	/* toopazo */
 	uORB::SubscriptionCallbackWorkItem _control_subs[actuator_controls_s::NUM_ACTUATOR_CONTROL_GROUPS];
 
 	uORB::PublicationMulti<actuator_outputs_s> _outputs_pub{ORB_ID(actuator_outputs)};
 	uORB::PublicationMulti<control_allocator_status_s> _control_allocator_status_pub{ORB_ID(control_allocator_status)};
+	/* toopazo */
+	uORB::Publication<firefly_ctrlalloc_s> _ctrlalloc_pub{ORB_ID(firefly_ctrlalloc)};
+	/* toopazo */
 
 	actuator_controls_s _controls[actuator_controls_s::NUM_ACTUATOR_CONTROL_GROUPS] {};
 	actuator_armed_s _armed{};
+	/* toopazo */
+	firefly_delta_s _delta{};
+	rc_channels_s _rcchan{};
+	/* toopazo */
+
 
 	hrt_abstime _time_last_dt_update_multicopter{0};
 	hrt_abstime _time_last_dt_update_simple_mixer{0};

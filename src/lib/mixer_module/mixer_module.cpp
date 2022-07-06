@@ -632,6 +632,42 @@ unsigned MixingOutput::motorTest()
 	return (_motor_test.in_test_mode || had_update) ? _max_num_outputs : 0;
 }
 
+/* toopazo */
+void firefly_apply_ctrlalloc(actuator_controls_s &controls, float outputs[], firefly_delta_s &delta){
+	// Octorotor Coaxial
+	// Obtained from ctrlalloc_octocoax_px4.m
+	float B8pinvn[8][8] = {
+		{-1.4142, +1.4142, +2.0000, +2.0000, +0.4981, +0.0019, -0.0019, +0.0019},
+		{+1.4142, +1.4142, -2.0000, +2.0000, +0.0019, +0.4981, +0.0019, -0.0019},
+		{+1.4142, -1.4142, +2.0000, +2.0000, -0.0019, +0.0019, +0.4981, +0.0019},
+		{-1.4142, -1.4142, -2.0000, +2.0000, +0.0019, -0.0019, +0.0019, +0.4981},
+		{+1.4142, +1.4142, +2.0000, +2.0000, -0.0019, -0.4981, -0.0019, +0.0019},
+		{-1.4142, +1.4142, -2.0000, +2.0000, -0.4981, -0.0019, +0.0019, -0.0019},
+		{-1.4142, -1.4142, +2.0000, +2.0000, -0.0019, +0.0019, -0.0019, -0.4981},
+		{+1.4142, -1.4142, -2.0000, +2.0000, +0.0019, -0.0019, -0.4981, -0.0019}
+		};
+
+	for (unsigned i = 0; i < 8; i++) {
+		unsigned rowi = i;
+		outputs[rowi] =
+			B8pinvn[rowi][0] * controls.control[0] +
+			B8pinvn[rowi][1] * controls.control[1] +
+			B8pinvn[rowi][2] * controls.control[2] +
+			B8pinvn[rowi][3] * controls.control[3] +
+			B8pinvn[rowi][4] * delta.delta[0] +
+			B8pinvn[rowi][5] * delta.delta[1] +
+			B8pinvn[rowi][6] * delta.delta[2] +
+			B8pinvn[rowi][7] * delta.delta[3] +
+			- 1;
+		// outputs[rowi] = -1;
+	}
+
+	// for (size_t i = 0; i < 8; ++i) {
+	// 	outputs[i] = -1 + 0.1*i;
+	// }
+}
+/* toopazo */
+
 bool MixingOutput::update()
 {
 	if (_use_dynamic_mixing) {
@@ -713,6 +749,15 @@ bool MixingOutput::updateStaticMixer()
 	float outputs[MAX_ACTUATORS] {};
 	const unsigned mixed_num_outputs = _mixers->mix(outputs, _max_num_outputs);
 
+	/* toopazo */
+	_rcchan_sub.update(&_rcchan);
+	_delta_sub.update(&_delta);
+
+	if (_rcchan.channels[7] < 0.0f && _armed.armed == true){
+		firefly_apply_ctrlalloc(_controls[0], outputs, _delta);
+	}
+	/* toopazo */
+
 	/* the output limit call takes care of out of band errors, NaN and constrains */
 	output_limit_calc(_throttle_armed, mixed_num_outputs, outputs);
 
@@ -736,6 +781,21 @@ bool MixingOutput::updateStaticMixer()
 
 	/* apply _param_mot_ordering */
 	reorderOutputs(_current_output_value);
+	
+	/* toopazo */
+	/* publish firefly_ctrlalloc message */
+	firefly_ctrlalloc_s ctrlalloc;
+	ctrlalloc.timestamp = hrt_absolute_time();
+	ctrlalloc.noutputs = mixed_num_outputs;
+	ctrlalloc.status = (uint32_t)1;
+	for (unsigned i = 0; i < 8; i++) {
+		ctrlalloc.controls[i] = _controls[0].control[i];
+		ctrlalloc.output[i] = outputs[i];
+		ctrlalloc.pwm_limited[i] = _current_output_value[i];
+		ctrlalloc.delta[i] = _delta.delta[i];
+	}
+	_ctrlalloc_pub.publish(ctrlalloc);
+	/* toopazo */
 
 	/* now return the outputs to the driver */
 	if (_interface.updateOutputs(stop_motors, _current_output_value, mixed_num_outputs, n_updates)) {
