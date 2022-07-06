@@ -81,6 +81,8 @@ set(msg_files
 	estimator_status_flags.msg
 	event.msg
 	failure_detector_status.msg
+	firefly_ctrlalloc.msg
+	firefly_delta.msg
 	follow_target.msg
 	follow_target_estimator.msg
 	follow_target_status.msg
