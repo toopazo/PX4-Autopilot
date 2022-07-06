@@ -1,0 +1,5 @@
+menuconfig EXAMPLES_FIREFLY
+	bool "firefly"
+	default n
+	---help---
+		Enable support for firefly
