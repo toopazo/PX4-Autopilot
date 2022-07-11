@@ -360,6 +360,7 @@
       <description>Get the current delta rpm command.
         Custom message to read the current delta rpm command for firefly control allocation (coaxial rotors).
       </description>
+        <field type="uint32_t" name="time_boot_ms" units="ms">Timestamp (time since system boot).</field>
         <field type="uint32_t" name="status" units="">Status.</field>
         <field type="uint32_t" name="noutputs" units="">Number of outputs.</field>
         <field type="float[8]" name="delta" units="">Delta command for coaxial pair / arm</field>
@@ -368,6 +369,7 @@
         <description>Get the current state of the controll allocation unit.
           Custom message to read the current state of the firefly control allocation unit (coaxial rotors).
         </description>
+        <field type="uint32_t" name="time_boot_ms" units="ms">Timestamp (time since system boot).</field>
         <field type="uint32_t" name="status" units="">Status.</field>
         <field type="uint32_t" name="noutputs" units="">Number of outputs.</field>
         <field type="float[8]" name="controls" units="">Input into the control allocation unit</field>

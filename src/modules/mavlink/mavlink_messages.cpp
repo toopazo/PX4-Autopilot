@@ -134,6 +134,10 @@
 # include "streams/LINK_NODE_STATUS.hpp"
 # include "streams/NAMED_VALUE_FLOAT.hpp"
 # include "streams/ODOMETRY.hpp"
+/* toopazo */
+# include "streams/FIREFLY_CTRLALLOC.hpp"
+# include "streams/FIREFLY_DELTA.hpp"
+/* toopazo */
 # include "streams/SCALED_PRESSURE2.hpp"
 # include "streams/SCALED_PRESSURE3.hpp"
 # include "streams/SMART_BATTERY_INFO.hpp"
@@ -395,6 +399,14 @@ static const StreamListItem streams_list[] = {
 #if defined(ODOMETRY_HPP)
 	create_stream_list_item<MavlinkStreamOdometry>(),
 #endif // ODOMETRY_HPP
+/* toopazo */
+#if defined(FIREFLY_CTRLALLOC_HPP)
+	create_stream_list_item<MavlinkStreamFireflyCtrlalloc>(),
+#endif // FIREFLY_CTRLALLOC_HPP
+#if defined(FIREFLY_DELTA_HPP)
+	create_stream_list_item<MavlinkStreamFireflyDelta>(),
+#endif // FIREFLY_DELTA_HPP
+/* toopazo */
 #if defined(ESTIMATOR_STATUS_HPP)
 	create_stream_list_item<MavlinkStreamEstimatorStatus>(),
 #endif // ESTIMATOR_STATUS_HPP
